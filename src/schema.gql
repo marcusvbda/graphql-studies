@@ -4,14 +4,20 @@
 # -----------------------------------------------
 
 type Appointment {
+  customer: Customer!
+  customerId: Float
   endsAt: DateTime!
   startsAt: DateTime!
 }
 
 input CreateAppointmentInput {
-  customerId: String!
+  customerId: Float!
   endsAt: DateTime!
   startsAt: DateTime!
+}
+
+type Customer {
+  name: String!
 }
 
 """
