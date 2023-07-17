@@ -1,20 +1,27 @@
-import { ApolloServer } from "apollo-server";
-import "reflect-metadata";
-import { AppointmentsResolver } from "./resolvers/appointments-resolver";
-import { buildSchema } from "type-graphql";
-import path from "path";
+import 'reflect-metadata';
+import { buildSchema } from 'type-graphql';
+import path from 'path';
+import { DataSource } from 'typeorm';
+import { startStandaloneServer } from '@apollo/server/standalone';
+import { ApolloServer } from '@apollo/server';
 
 async function bootstrap() {
-  const schema = await buildSchema({
-    resolvers: [AppointmentsResolver],
-    emitSchemaFile: path.resolve(__dirname, "schema.gql"),
-  } as any);
-  const server = new ApolloServer({
-    schema,
-  });
+    const schema = await buildSchema({
+        resolvers: [path.join(__dirname, '/**/*.resolver.{js,ts}')],
+        emitSchemaFile: path.resolve(__dirname, 'schema.gql'),
+    } as any);
+    const server = new ApolloServer({
+        schema,
+    });
 
-  const { url } = await server.listen();
-  console.log(`Server is running on ${url}`);
+    const { url } = await startStandaloneServer(server, {
+        context: async ({ req, res }) => {
+            const dataSource = await DataSource;
+            return { req, res, dataSource };
+        },
+    });
+
+    console.log(`🚀 Server listening at: ${url}`);
 }
 
 bootstrap();
