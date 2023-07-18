@@ -1,12 +1,5 @@
-import {
-    Entity,
-    PrimaryGeneratedColumn,
-    Column,
-    BaseEntity,
-    CreateDateColumn,
-    ObjectIdColumn,
-} from 'typeorm';
-import { Field, Int, ObjectType } from 'type-graphql';
+import { Entity, Column, BaseEntity, ObjectIdColumn } from 'typeorm';
+import { Field, ObjectType } from 'type-graphql';
 import { ObjectId } from 'mongodb';
 
 @ObjectType()
@@ -19,12 +12,4 @@ export class User extends BaseEntity {
     @Field()
     @Column()
     name!: string;
-
-    @Field(() => Int)
-    @Column('int', { default: 0 })
-    quantity!: number;
-
-    @Field(() => String)
-    @CreateDateColumn({ type: 'timestamp' })
-    createdAt!: string;
 }

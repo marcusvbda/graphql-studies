@@ -20,10 +20,3 @@ const dataSource = new DataSource({
 });
 
 export const AppDataSource = dataSource.initialize();
-
-export const makeRepository = async <T extends ObjectLiteral>(
-    entity: any
-): Promise<Repository<T>> => {
-    const repository = await (await AppDataSource).getRepository(entity);
-    return repository as Repository<T>;
-};

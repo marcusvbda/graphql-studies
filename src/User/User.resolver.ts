@@ -1,49 +1,34 @@
-import {
-    Arg,
-    FieldResolver,
-    Mutation,
-    Query,
-    Resolver,
-    Root,
-} from 'type-graphql';
-import { CreateAppointmentInput } from './dtos/inputs/create-appointment-input';
-import { Appointment } from './dtos/models/appointment-model';
-import { Customer } from './dtos/models/customer-model';
-// import { User } from './User.entity';
-// import { makeRepository } from '../../data-source';
-// import { ObjectId } from 'mongodb';
-// import { FindOneOptions } from 'typeorm';
+import { Arg, Ctx, Mutation, Query, Resolver } from 'type-graphql';
+import { User } from './User.entity';
+import { DataSource } from 'typeorm';
+import { CreateUser } from './dtos/CreateUser.dto';
 
-const appointments: Appointment[] = [];
-@Resolver(() => Appointment)
+@Resolver(() => User)
 export class UserResolver {
-    @Query(() => [Appointment!])
-    async appointments() {
-        // const userRepository = await makeRepository<User>(User);
-        // const users = await userRepository.findOne(
-        //     new ObjectId('64b5d133a97ff4d91116eef6') as FindOneOptions<User>
-        // );
-        // console.log(users);
-
-        return appointments;
+    @Query(() => [User!])
+    async users(@Ctx('dataSource') dataSource: DataSource) {
+        const userRepository = dataSource.getRepository<User>(User);
+        const users = await userRepository.find();
+        return users;
     }
 
-    @Mutation(() => Appointment)
-    async createAppointment(@Arg('data') data: CreateAppointmentInput) {
-        const appointment = {
-            customerId: data.customerId,
-            startsAt: data.startsAt,
-            endsAt: data.endsAt,
-        };
-
-        appointments.push(appointment);
-        return appointment;
+    @Mutation(() => User)
+    async createUser(
+        @Ctx('dataSource') dataSource: DataSource,
+        @Arg('data') data: CreateUser
+    ) {
+        const userRepository = dataSource.getRepository<User>(User);
+        const user = await userRepository.create({
+            name: data.name,
+        });
+        await user.save();
+        return user;
     }
 
-    @FieldResolver(() => Customer)
-    async customer(@Root() appointment: Appointment) {
-        return {
-            name: 'John Doe',
-        };
-    }
+    // @FieldResolver(() => Role)
+    // async role(@Root() user: User) {
+    //     return {
+    //         name: 'John Doe',
+    //     };
+    // }
 }

@@ -3,32 +3,19 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
-type Appointment {
-  customer: Customer!
-  customerId: Float
-  endsAt: DateTime!
-  startsAt: DateTime!
-}
-
-input CreateAppointmentInput {
-  customerId: Float!
-  endsAt: DateTime!
-  startsAt: DateTime!
-}
-
-type Customer {
+input CreateUser {
   name: String!
 }
 
-"""
-The javascript `Date` as string. Type represents date and time as the ISO Date string.
-"""
-scalar DateTime
-
 type Mutation {
-  createAppointment(data: CreateAppointmentInput!): Appointment!
+  createUser(data: CreateUser!): User!
 }
 
 type Query {
-  appointments: [Appointment!]!
+  users: [User!]!
+}
+
+type User {
+  _id: String!
+  name: String!
 }
