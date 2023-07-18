@@ -3,19 +3,29 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
-input CreateUser {
+input CreateUserDto {
   name: String!
 }
 
+input FetchUserDto {
+  _id: String
+  name: String
+  skip: Int = 0
+  take: Int = 25
+}
+
 type Mutation {
-  createUser(data: CreateUser!): User!
+  createUser(data: CreateUserDto!): User!
 }
 
 type Query {
-  users: [User!]!
+  countUsers(data: FetchUserDto!): Float!
+  fetchUsers(data: FetchUserDto!): [User!]!
+  findUser(id: String!): User!
 }
 
 type User {
   _id: String!
   name: String!
+  role: String!
 }
