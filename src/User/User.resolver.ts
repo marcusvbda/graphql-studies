@@ -12,6 +12,7 @@ import { DataSource } from 'typeorm';
 import { ObjectId } from 'mongodb';
 import { FetchUserDto } from './dtos/FetchUser.dto';
 import { CreateUserDto } from './dtos/CreateUser.dto';
+import { Role } from '../Role/Role.entity';
 
 @Resolver(() => User)
 export class UserResolver {
@@ -29,6 +30,7 @@ export class UserResolver {
             where,
             skip: data.skip,
             take: data.take,
+            relations: ['role'],
         };
     }
 
@@ -73,9 +75,13 @@ export class UserResolver {
         return user;
     }
 
-    @FieldResolver(() => String)
-    async role(@Root() user: User) {
-        // console.log(user);
-        return 'admin';
+    @FieldResolver(() => Role)
+    async role(@Root() user: User, @Ctx('dataSource') dataSource: DataSource) {
+        const rolesRepository = dataSource.getRepository<Role>(Role);
+        return await rolesRepository.findOne({
+            where: {
+                name: user.roleName,
+            },
+        } as any);
     }
 }

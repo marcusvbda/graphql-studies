@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 require('dotenv').config();
-import { DataSource, ObjectLiteral, Repository } from 'typeorm';
+import { DataSource } from 'typeorm';
 
 interface IENV {
     [key: string]: any;

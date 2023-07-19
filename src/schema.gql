@@ -20,12 +20,28 @@ type Mutation {
 
 type Query {
   countUsers(data: FetchUserDto!): Float!
+  currentVersion: VersionControl!
+  fetchRole(id: String!): Role!
+  fetchRoles: Role!
   fetchUsers(data: FetchUserDto!): [User!]!
   findUser(id: String!): User!
+}
+
+type Role {
+  _id: String!
+  description: String!
+  name: String!
+  permissions: [String!]!
 }
 
 type User {
   _id: String!
   name: String!
-  role: String!
+  role: Role!
+  roleName: String!
+}
+
+type VersionControl {
+  _id: String!
+  version: String!
 }
